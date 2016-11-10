@@ -19,7 +19,7 @@ public class Reports {
     }
 
     public String studentsOfACourse (String courseid) throws SQLException{
-        String sql = "SELECT enrolment.student, enrolment.course, enrolment.finalgrade, student.firstname, student.lastname FROM enrolment INNER JOIN student ON course = '" + courseid + "';";
+        String sql = "SELECT enrolment.student, enrolment.course, enrolment.finalgrade, student.firstname, student.lastname FROM enrolment INNER JOIN student ON enrolment.student = student.studentid WHERE course = '"+courseid+"';";
         if (isExistCourse(courseid)){
             return myDBApp.selectToHtmlFile(sql, "course_enrols.html");
         }

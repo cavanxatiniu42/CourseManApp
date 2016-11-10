@@ -12,7 +12,7 @@ public class MenuStudent {
         this.myDBApp = myDBApp;
     }
 
-    public boolean addStudent(int studentId, String firstName, String lastName, String address, String dateOfBirth){
+    public boolean addStudent(int studentId, String firstName, String lastName, String address, String dateOfBirth) throws SQLException {
         String sql = String.format("INSERT INTO Student VALUES (%d,'%s','%s','%s','%s');", studentId, firstName, lastName, address, dateOfBirth);
         if (validateID(studentId) && validateName(firstName) && validateName(lastName) && validateAddress(address) && validateDOB(dateOfBirth)){
             if (myDBApp.insert(sql)){
@@ -50,9 +50,11 @@ public class MenuStudent {
         return myDBApp.selectAll(sql);
     }
 
-    private boolean validateID (int studentId){
+    private boolean validateID (int studentId) throws SQLException {
         String sql = "SELECT studentid FROM student WHERE studentid = "+ studentId+ " ";
-        if (studentId <= Integer.parseInt(myDBApp.maxID(sql))){
+        if (!myDBApp.selectAll(sql).equals("")){
+            System.out.println(myDBApp.selectAll(sql));
+            System.err.println("studentid is existed!");
             return false;
         }
        return true;
