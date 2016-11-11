@@ -34,6 +34,7 @@ public class Main {
         }while (choice != 0);
         myDBApp.close();
     }
+
     public static void menuStudent (MyDBApp myDBApp) throws SQLException {
         MenuStudent menuStudent = new MenuStudent(myDBApp);
         int choice;
