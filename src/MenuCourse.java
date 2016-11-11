@@ -10,10 +10,10 @@ public class MenuCourse {
         this.myDBApp = myDBApp;
     }
 
-    public boolean addCourse (String courseId, String courseName, String prerequisite){
+    public boolean addCourse (String courseId, String courseName, String prerequisite) throws SQLException {
         if (validateCourseId(courseId) &&validateCourseName(courseName) && validatePrerequisite(prerequisite)){
 
-            String sql = String.format("INSERT INTO course VALUES ('%s','%s','%s','%s','%s');", courseId, courseName, prerequisite);
+            String sql = String.format("INSERT INTO course VALUES ('%s','%s','%s');", courseId, courseName, prerequisite);
             if (myDBApp.insert(sql)){
                 return true;
             }
@@ -25,7 +25,7 @@ public class MenuCourse {
         if (validateCourseName(courseName) && validatePrerequisite(prerequisite)){
 
             String sql = String.format("UPDATE course \n" +
-                    "SET courseName = '%s', prerequisite = '%s' \n" +
+                    "SET name = '%s', prerequisites = '%s' \n" +
                     "WHERE courseid = '%s';", courseName, prerequisite, courseId);
             if (myDBApp.update(sql)){
                 return true;
@@ -35,7 +35,7 @@ public class MenuCourse {
     }
 
     public boolean deleteCourse (String courseId){
-        String sql = "DELETE FROM course WHERE courseid = "+courseId+" ";
+        String sql = "DELETE FROM course WHERE courseid = '"+courseId+"' ";
         if (myDBApp.delete(sql)){
             return true;
         }
@@ -52,9 +52,10 @@ public class MenuCourse {
         return myDBApp.selectAll(sql);
     }
 
-    private boolean validateCourseId(String courseId){
-        String sql = "SELECT courseid FROM course WHERE courseid = "+ courseId;
-        if (courseId != null && courseId.length() <= 5){
+    private boolean validateCourseId(String courseId) throws SQLException {
+        String sql = "SELECT courseid FROM course WHERE courseid = '"+ courseId+ "' ";
+        if (!myDBApp.selectAll(sql).equals("")){
+            System.err.println("courseid is existed!");
             return false;
         }
         return true;

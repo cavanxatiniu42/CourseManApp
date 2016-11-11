@@ -11,11 +11,12 @@ public class EnrolmentManagement {
     }
 
     public  boolean addEnrolment (int studentId, String courseId, int semester) throws SQLException {
+        final char defaultFinalGrade = 'F';
         if (validateCourseId(courseId)&&validateStudentId(studentId)&&validateSemester(semester)){
             if (isExistCourse(courseId)&&isExistStudent(studentId)){
                 if (isExistEnrolment(studentId,courseId)){
                     if (isEligibleToEnroll(studentId,courseId)){
-                        String sql = String.format("INSERT INTO Enrolment VALUES (%d,'%s',%d);", studentId, courseId, semester);
+                        String sql = String.format("INSERT INTO Enrolment VALUES (%d,'%s',%d, '%s');", studentId, courseId, semester, defaultFinalGrade );
                         return myDBApp.insert(sql);
                     }
                 }
@@ -24,9 +25,9 @@ public class EnrolmentManagement {
         return false;
     }
 
-    public boolean updateFinalGrade (int studentId, String courseId, String finalGrade) throws SQLException {
+    public boolean updateFinalGrade (int studentId, String courseId, char finalGrade) throws SQLException {
         if (validateStudentId(studentId) && validateCourseId(courseId) && validateFinalGrade(finalGrade)){
-            if (isExistEnrolment(studentId,courseId)){
+            if (!isExistEnrolment(studentId,courseId)){
                 String sql = String.format("UPDATE enrolment \n" +
                         "SET finalgrade = '%s' \n" +
                         "WHERE student = %d AND course = '%s';", finalGrade, studentId, courseId);
@@ -37,46 +38,44 @@ public class EnrolmentManagement {
     }
 
     public String allEnrolment() throws SQLException {
-        String sql = "SELECT * FROM enrolment";
+        String sql =  "SELECT student.studentid, student.firstname, student.lastname, enrolment.course, enrolment.semester, enrolment.finalgrade" +
+                " FROM enrolment INNER JOIN student ON enrolment.student = student.studentid";
         return myDBApp.selectAll(sql);
     }
 
     public String allEnrolmentToHtmlFile(){
-         String sql = "SELECT * FROM enrolment";
+         String sql = "SELECT student.studentid, student.firstname, student.lastname, enrolment.course, enrolment.semester, enrolment.finalgrade" +
+                 " FROM enrolment INNER JOIN student ON enrolment.student = student.studentid";
          return myDBApp.selectToHtmlFile(sql, "enrols.html");
      }
 
     public String allEnrolmentInSortedOrder(){
-         String sql = "SELECT * " +
-                 "FROM Enrolment " +
-                 "ORDER BY " +
-                 " CASE finalgrade " +
-                 "   WHEN  'E' THEN 1 " +
-                 "   WHEN  'G' THEN 2 " +
-                 "   WHEN  'P' THEN 3 " +
-                 "   WHEN  'F' THEN 4 " +
-                 "   ELSE 5" +
-                 "   END";
-         return myDBApp.selectToHtmlFile(sql, "enrols_sorted.html");
+         String sql = "SELECT student.firstname, student.lastname, enrolment.course, enrolment.semester, enrolment.finalgrade " +
+                 "FROM enrolment INNER JOIN student ON enrolment.student = student.studentid " +
+                 "ORDER BY CASE finalgrade " +
+                 "WHEN  'E' THEN 1 " +
+                 "WHEN  'G' THEN 2 " +
+                 "WHEN  'P' THEN 3 " +
+                 "WHEN  'F' THEN 4 " +
+                 "ELSE 5 END";
+        return myDBApp.selectToHtmlFile(sql, "enrols_sorted.html");
      }
 
     private boolean isEligibleToEnroll(int studentId, String courseId) throws SQLException {
         String sql = String.format("SELECT prerequisites FROM course WHERE courseid = '%s';", courseId);
         String prerequisites = myDBApp.selectAll(sql).substring(0,3);
-        String sql2 = String.format("SELECT finalgrade FROM enrolment WHERE student = %d AND course = '%s';", studentId, prerequisites );
-        String finalGrade = myDBApp.selectAll(sql2).substring(0,1);
-        if (finalGrade.equals("F") || finalGrade.equals("_")){
+        String sql2 = "SELECT finalgrade FROM enrolment WHERE student = " +studentId+" AND course = '"+prerequisites+"'";
+        if (myDBApp.selectAll(sql2).equals(" ")){
             return false;
         }
         return true;
     }
 
     private boolean isExistEnrolment(int studentId, String courseId) throws SQLException {
-         String sql = String.format("SELECT * FROM enrolment WHERE student = %d AND course = '%s';",studentId, courseId);
-         if (!myDBApp.selectAll(sql).equals("")){
+         String sql ="SELECT * FROM enrolment WHERE student ="+ studentId+" AND course = '"+ courseId+"';";
+         if (myDBApp.selectAll(sql).equals("")){
              return true;
          }
-         System.err.println("Student has not enrolled to this course.");
          return false;
      }
 
@@ -122,8 +121,8 @@ public class EnrolmentManagement {
         return false;
     }
 
-    private boolean validateFinalGrade (String finalGrade){
-        if (finalGrade.equals("E")|| finalGrade.equals("G") || finalGrade.equals("P") || finalGrade.equals("F") || finalGrade.equals("_")){
+    private boolean validateFinalGrade (char finalGrade){
+        if (finalGrade == 'E'|| finalGrade == 'G' || finalGrade == 'P' || finalGrade == 'F'){
             return true;
         }
         System.err.println("Invalid final grade");

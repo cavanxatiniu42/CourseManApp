@@ -53,7 +53,6 @@ public class MenuStudent {
     private boolean validateID (int studentId) throws SQLException {
         String sql = "SELECT studentid FROM student WHERE studentid = "+ studentId+ " ";
         if (!myDBApp.selectAll(sql).equals("")){
-            System.out.println(myDBApp.selectAll(sql));
             System.err.println("studentid is existed!");
             return false;
         }

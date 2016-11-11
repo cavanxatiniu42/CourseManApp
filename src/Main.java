@@ -9,14 +9,29 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         MyDBApp myDBApp = new MyDBApp("jdbc:postgresql:%s");
         myDBApp.connect("courseman", "postgres", "123456");
-
-        EnrolmentManagement enrolmentManagement = new EnrolmentManagement(myDBApp);
-        Reports reports = new Reports(myDBApp);
-
-        menuStudent(myDBApp);
-//        MenuStudent menuStudent = new MenuStudent(myDBApp);
-//        System.out.println(menuStudent.validateID(12));
-
+        int choice;
+        do {
+            TextIO.putln("===========Course Man App============");
+            TextIO.putln("1. Menu Student");
+            TextIO.putln("2. Menu Course");
+            TextIO.putln("3. Menu Enrolment");
+            TextIO.putln("4. Reports");
+            TextIO.putln("0. Exit");
+            switch (choice= TextIO.getInt()){
+                case 1:
+                    menuStudent(myDBApp);
+                    break;
+                case 2:
+                    menuCourse(myDBApp);
+                    break;
+                case 3:
+                    menuEnrolment(myDBApp);
+                    break;
+                case 4:
+                    report(myDBApp);
+                    break;
+            }
+        }while (choice != 0);
         myDBApp.close();
     }
     public static void menuStudent (MyDBApp myDBApp) throws SQLException {
@@ -53,7 +68,7 @@ public class Main {
                     TextIO.putln("Input studentID you want to edit: ");
                     int studentID = TextIO.getInt();
                     TextIO.putln(myDBApp.selectAll("SELECT * FROM student WHERE studentid = '" + studentID+ "';"));
-                    TextIO.putln("Is this student you want to edit?" +
+                    TextIO.putln("Is this student you want to edit?\r\n" +
                                  "If yes, press 1; else press 0?");
                     int c = TextIO.getInt();
                     if (c == 0){
@@ -78,7 +93,7 @@ public class Main {
                     TextIO.putln("Input student id you want to delete? ");
                     int id = TextIO.getInt();
                     TextIO.putln(myDBApp.selectAll("SELECT * FROM student WHERE studentid = '" + id+ "';"));
-                    TextIO.putln("Is this student you want to delete?" +
+                    TextIO.putln("Is this student you want to delete? \r\n" +
                             "If yes, press 1; else press 0?");
                     int c2 = TextIO.getInt();
                     if (c2 == 0){
@@ -100,6 +115,171 @@ public class Main {
 
             }
 
+        } while (choice != 0);
+    }
+
+    public static void menuCourse (MyDBApp myDBApp) throws SQLException {
+        MenuCourse menuCourse = new MenuCourse(myDBApp);
+        int choice;
+        do {
+            TextIO.putln("==================Menu Course===================");
+            TextIO.putln("1. Add a course");
+            TextIO.putln("2. Edit course");
+            TextIO.putln("3. Delete a course");
+            TextIO.putln("4. Show all courses");
+            TextIO.putln("5. Show all courses in an HTML file");
+            TextIO.putln("0. Exit");
+            switch (choice = TextIO.getInt()){
+                case 1:
+                    TextIO.getln();
+                    TextIO.putln("Input course id: ");
+                    String courseId = TextIO.getln();
+                    TextIO.putln("Input course name: ");
+                    String courseName = TextIO.getln();
+                    TextIO.putln("Input course's prerequisite: ");
+                    String prerequisite = TextIO.getln();
+                    if (menuCourse.addCourse(courseId, courseName, prerequisite)){
+                        TextIO.putln("Add successfully");
+                    } else {
+                        TextIO.putln("Failed");
+                    }
+                    break;
+                case 2:
+                    TextIO.getln();
+                    TextIO.putln("Input course id you want to edit: ");
+                    String courseID = TextIO.getln();
+                    TextIO.putln(myDBApp.selectAll("SELECT * FROM course WHERE courseid = '" + courseID+ "'"));
+                    TextIO.putln("Is this student you want to edit? \r\n" +
+                            "If yes, press 1; else press 0?");
+                    int c = TextIO.getInt();
+                    if (c == 0){
+                        break;
+                    }
+                    TextIO.getln();
+                    TextIO.putln("Input new course name: ");
+                    String newCourseName = TextIO.getln();
+                    TextIO.putln("Input new prerequisite: ");
+                    String newPrerequisite = TextIO.getln();
+                    if (menuCourse.updateCourse(courseID, newCourseName, newPrerequisite)){
+                        TextIO.putln("Edit successfully");
+                    } else {
+                        TextIO.putln("Failed");
+                    }
+                    break;
+                case 3:
+                    TextIO.getln();
+                    TextIO.putln("Input course id you want to delete? ");
+                    String ID = TextIO.getln();
+                    TextIO.putln(myDBApp.selectAll("SELECT * FROM course WHERE courseid = '" + ID+"'"));
+                    TextIO.putln("Is this the course you want to delete? \r\n" +
+                                 "If yes, press 1, else press 0?");
+                    int c2 = TextIO.getInt();
+                    if (c2 == 0){
+                        break;
+                    }
+                    if (menuCourse.deleteCourse(ID)){
+                        TextIO.putln("Delete successfully");
+                    } else {
+                        TextIO.putln("Failed");
+                    }
+                    break;
+                case 4:
+                    TextIO.putln(menuCourse.allCourse());
+                    break;
+                case 5:
+                    TextIO.putln(menuCourse.showAllCourseInHtmlFile());
+
+
+            }
+        } while (choice != 0);
+    }
+
+    public static void menuEnrolment (MyDBApp myDBApp) throws SQLException {
+        EnrolmentManagement enrolmentManagement = new EnrolmentManagement(myDBApp);
+        int choice;
+        do {
+            TextIO.putln("==================Menu Enrolment===================");
+            TextIO.putln("1. Add a enrolment");
+            TextIO.putln("2. Update final grade");
+            TextIO.putln("3. Show all enrolments");
+            TextIO.putln("4. Show all enrolments in HTML file");
+            TextIO.putln("5. Show all courses in an HTML file sorted");
+            TextIO.putln("0. Exit");
+            switch (choice = TextIO.getInt()){
+                case 1:
+                    TextIO.putln("Input student id");
+                    int studentID = TextIO.getInt();
+                    TextIO.getln();
+                    TextIO.putln("Input course id ");
+                    String courseId = TextIO.getln();
+                    TextIO.putln("Input semester");
+                    int semester = TextIO.getInt();
+                    if (enrolmentManagement.addEnrolment(studentID, courseId, semester)){
+                        TextIO.putln("Add successfully");
+                    } else {
+                        TextIO.putln("failed");
+                    }
+                    break;
+                case 2:
+                    TextIO.putln("Input student id: ");
+                    int studentId = TextIO.getInt();
+                    TextIO.getln();
+                    TextIO.putln("Input course id: ");
+                    String courseID = TextIO.getln();
+                    TextIO.putln(myDBApp.selectAll("SELECT enrolment.course, student.firstname, student.lastname, enrolment.finalgrade " +
+                            "FROM enrolment INNER JOIN student ON enrolment.student = student.studentid " +
+                            "WHERE course = '"+courseID+"' AND student = "+studentId+";"));
+                    TextIO.putln("Is this enrolment you want to update? \r\n" +
+                                 "If yes, press 1, else press 0?");
+                    int c = TextIO.getInt();
+                    if (c == 0){
+                        break;
+                    }
+                    TextIO.putln("Input new final grade: ");
+                    char finalGrade = TextIO.getChar();
+                    if (enrolmentManagement.updateFinalGrade(studentId,courseID,finalGrade)){
+                        TextIO.putln("Update successfully");
+                    } else {
+                        TextIO.putln("fail");
+                    }
+                    break;
+                case 3:
+                    TextIO.putln(enrolmentManagement.allEnrolment());
+                    break;
+                case 4:
+                    TextIO.putln(enrolmentManagement.allEnrolmentToHtmlFile());
+                    break;
+                case 5:
+                    TextIO.putln(enrolmentManagement.allEnrolmentInSortedOrder());
+            }
+        }while (choice != 0);
+
+    }
+
+    public static void report(MyDBApp myDBApp) throws SQLException {
+        Reports reports = new Reports(myDBApp);
+        int choice;
+        do {
+            TextIO.putln("==================Reports==================");
+            TextIO.putln("1. Display all courses of a student");
+            TextIO.putln("2. Display all students in a course");
+            TextIO.putln("3. Display all students failing at least one course");
+            switch (choice = TextIO.getInt()){
+                case 1:
+                    TextIO.putln("Input student id: ");
+                    int studentId = TextIO.getInt();
+                    TextIO.putln(reports.courseOfAStudent(studentId));
+                    break;
+                case 2:
+                    TextIO.getln();
+                    TextIO.putln("Input course id: ");
+                    String courseId = TextIO.getln();
+                    TextIO.putln(reports.studentsOfACourse(courseId));
+                    break;
+                case 3:
+                    TextIO.putln(reports.failedStudent());
+                    break;
+            }
         } while (choice != 0);
     }
 

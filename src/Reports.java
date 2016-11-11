@@ -11,7 +11,9 @@ public class Reports {
     }
 
     public String courseOfAStudent (int studentid) throws SQLException {
-        String sql = "SELECT course FROM enrolment WHERE student = " + studentid + ";";
+        String sql = "SELECT enrolment.course, enrolment.semester, enrolment.finalgrade, student.firstname, student.lastname " +
+                "FROM enrolment INNER JOIN student ON enrolment.student = student.studentid " +
+                "WHERE student = " + studentid;
         if (isExistStudent(studentid)){
             return myDBApp.selectToHtmlFile(sql, "my_enrols.html");
         }
@@ -27,7 +29,9 @@ public class Reports {
     }
 
     public String failedStudent (){
-        String sql = "SELECT * FROM enrolment WHERE finalgrade = 'F';";
+        String sql = "SELECT student.studentid, student.firstname, student.lastname, enrolment.course " +
+                "FROM enrolment INNER JOIN student ON enrolment.student = student.studentid" +
+                " WHERE finalgrade = 'F';";
         return myDBApp.selectToHtmlFile(sql, "fails.html");
     }
     private boolean isExistCourse(String courseId) throws SQLException {

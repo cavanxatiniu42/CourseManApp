@@ -124,6 +124,7 @@ public class MyDBApp {
                 return result.toString();
             }
     }
+
     public String maxID (String sql){
         try(Statement statement = this.connection.createStatement()){
             ResultSet resultSet;
