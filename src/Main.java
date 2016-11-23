@@ -50,6 +50,10 @@ public class Main {
                 case 1:
                     TextIO.putln("Input studentID: ");
                     int studentId = TextIO.getInt();
+                    if (menuStudent.isExistStudent(studentId)){
+                        TextIO.putln("Student existed");
+                        break;
+                    }
                     TextIO.putln("Input first name");
                     TextIO.getln();
                     String firstName =  TextIO.getln();
@@ -62,12 +66,17 @@ public class Main {
                     if (menuStudent.addStudent(studentId,firstName,lastName,address,dob)){
                         TextIO.putln("Add successfully!");
                     } else {
-                        TextIO.putln("Failed!");
+                        TextIO.putln("Failed! \n" +
+                                     "Check input!");
                     }
                     break;
                 case 2:
                     TextIO.putln("Input studentID you want to edit: ");
                     int studentID = TextIO.getInt();
+                    if (!menuStudent.isExistStudent(studentID)){
+                        TextIO.putln("Student does not exist");
+                        break;
+                    }
                     TextIO.putln(myDBApp.selectAll("SELECT * FROM student WHERE studentid = '" + studentID+ "';"));
                     TextIO.putln("Is this student you want to edit?\r\n" +
                                  "If yes, press 1; else press 0?");
@@ -87,12 +96,17 @@ public class Main {
                     if (menuStudent.updateStudent(studentID, fName, lName, add, dateOfBirth)){
                         TextIO.putln("Edit successfully");
                     } else {
-                        TextIO.putln("Failed");
+                        TextIO.putln("Failed \n" +
+                                "Check input");
                     }
                     break;
                 case 3:
                     TextIO.putln("Input student id you want to delete? ");
                     int id = TextIO.getInt();
+                    if (!menuStudent.isExistStudent(id)){
+                        TextIO.putln("Student does not exist");
+                        break;
+                    }
                     TextIO.putln(myDBApp.selectAll("SELECT * FROM student WHERE studentid = '" + id+ "';"));
                     TextIO.putln("Is this student you want to delete? \r\n" +
                             "If yes, press 1; else press 0?");
@@ -135,6 +149,10 @@ public class Main {
                     TextIO.getln();
                     TextIO.putln("Input course id: ");
                     String courseId = TextIO.getln();
+                    if (menuCourse.isExistCourse(courseId)){
+                        TextIO.putln("Course existed");
+                        break;
+                    }
                     TextIO.putln("Input course name: ");
                     String courseName = TextIO.getln();
                     TextIO.putln("Input course's prerequisite: ");
@@ -149,6 +167,10 @@ public class Main {
                     TextIO.getln();
                     TextIO.putln("Input course id you want to edit: ");
                     String courseID = TextIO.getln();
+                    if (!menuCourse.isExistCourse(courseID)){
+                        TextIO.putln("Course does not exist");
+                        break;
+                    }
                     TextIO.putln(myDBApp.selectAll("SELECT * FROM course WHERE courseid = '" + courseID+ "'"));
                     TextIO.putln("Is this student you want to edit? \r\n" +
                             "If yes, press 1; else press 0?");
@@ -171,6 +193,10 @@ public class Main {
                     TextIO.getln();
                     TextIO.putln("Input course id you want to delete? ");
                     String ID = TextIO.getln();
+                    if (!menuCourse.isExistCourse(ID)){
+                        TextIO.putln("Course does not exist");
+                        break;
+                    }
                     TextIO.putln(myDBApp.selectAll("SELECT * FROM course WHERE courseid = '" + ID+"'"));
                     TextIO.putln("Is this the course you want to delete? \r\n" +
                                  "If yes, press 1, else press 0?");
@@ -227,6 +253,10 @@ public class Main {
                     TextIO.getln();
                     TextIO.putln("Input course id: ");
                     String courseID = TextIO.getln();
+                    if (enrolmentManagement.isExistEnrolment(studentId,courseID)){
+                        TextIO.putln("Enrolment does not exist");
+                        break;
+                    }
                     TextIO.putln(myDBApp.selectAll("SELECT enrolment.course, student.firstname, student.lastname, enrolment.finalgrade " +
                             "FROM enrolment INNER JOIN student ON enrolment.student = student.studentid " +
                             "WHERE course = '"+courseID+"' AND student = "+studentId+";"));

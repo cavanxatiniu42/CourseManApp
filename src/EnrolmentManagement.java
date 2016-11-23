@@ -141,7 +141,7 @@ public class EnrolmentManagement {
      * @return
      * @throws SQLException
      */
-    private boolean isExistEnrolment(int studentId, String courseId) throws SQLException {
+    public boolean isExistEnrolment(int studentId, String courseId) throws SQLException {
          String sql ="SELECT * FROM enrolment WHERE student ="+ studentId+" AND course = '"+ courseId+"';";
          if (myDBApp.selectAll(sql).equals("")){
              return true;

@@ -35,9 +35,7 @@ public class MenuStudent {
         String sql = String.format("INSERT INTO Student VALUES (%d,'%s','%s','%s','%s');", studentId, firstName, lastName, address, dateOfBirth);
         if (validateID(studentId) && validateName(firstName) && validateName(lastName) && validateAddress(address) && validateDOB(dateOfBirth)){
             if (!isExistStudent(studentId)){
-                if (myDBApp.insert(sql)){
-                    return true;
-                }
+                return myDBApp.insert(sql);
             }
         }
         return false;
@@ -82,10 +80,7 @@ public class MenuStudent {
      */
     public boolean deleteStudent (int studentId){
         String sql = "DELETE FROM student WHERE studentid =" +studentId+ " ";
-        if (myDBApp.delete(sql)){
-            return true;
-        }
-        return false;
+        return myDBApp.delete(sql);
     }
 
     /**
@@ -117,7 +112,7 @@ public class MenuStudent {
      * @return
      * @throws SQLException
      */
-    private boolean isExistStudent(int studentId) throws SQLException {
+    public boolean isExistStudent(int studentId) throws SQLException {
         String sql = "SELECT studentid FROM student WHERE studentid = "+ studentId+ " ";
         if (myDBApp.selectAll(sql).equals("")){
             return false;

@@ -116,7 +116,7 @@ public class MenuCourse {
      * @return
      * @throws SQLException
      */
-    private boolean isExistCourse(String courseId) throws SQLException {
+    public boolean isExistCourse(String courseId) throws SQLException {
         String sql = "SELECT courseid FROM course WHERE courseid = '"+ courseId+ "' ";
         if (myDBApp.selectAll(sql).equals("")){
             return false;
