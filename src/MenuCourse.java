@@ -2,33 +2,33 @@ import java.sql.SQLException;
 
 /**
  * Created by Thu Thuy Nguyen on 17/10/2016.
- * @overview: a class to manage course in database
- * @attribute: myDBApp MyDBApp
+ * overview: a class to manage course in database
+ * attribute: myDBApp MyDBApp
  */
 public class MenuCourse {
     private MyDBApp myDBApp;
 
     /**
-     * @overview: create a MenuCourse object
-     * @param myDBApp
+     * overview: create a MenuCourse object
+     * @param myDBApp MyDBApp
      */
     public MenuCourse(MyDBApp myDBApp){
         this.myDBApp = myDBApp;
     }
 
     /**
-     * @overview: a method to add a new course into database
-     * @effect: if courseId, courseName, prerequisite are valid
+     * overview: a method to add a new course into database
+     * effect: if courseId, courseName, prerequisite are valid
      *              if course is not exist
      *                  using insert method in MyDBApp to insert into database
      *                  return true
      *           else
      *              return false
-     * @param courseId
-     * @param courseName
-     * @param prerequisite
-     * @return
-     * @throws SQLException
+     * @param courseId String
+     * @param courseName String
+     * @param prerequisite String
+     * @return boolean
+     * throws SQLException
      */
     public boolean addCourse (String courseId, String courseName, String prerequisite) throws SQLException {
         if (validateCourseID(courseId) &&validateCourseName(courseName) && validatePrerequisite(prerequisite)){
@@ -43,17 +43,17 @@ public class MenuCourse {
     }
 
     /**
-     * @overview: a method to update a course's information
-     * @effect:  if courseName and prerequisite are valid
+     * overview: a method to update a course's information
+     * effect:  if courseName and prerequisite are valid
      *              if course is exist
      *                  using method update in MyDBApp to update course
      *                  return true
      *            else return false
-     * @param courseId
-     * @param courseName
-     * @param prerequisite
-     * @return
-     * @throws SQLException
+     * @param courseId String
+     * @param courseName String
+     * @param prerequisite String
+     * @return boolean
+     * throws SQLException
      */
     public boolean updateCourse (String courseId, String courseName, String prerequisite) throws SQLException {
         if (validateCourseName(courseName) && validatePrerequisite(prerequisite)){
@@ -71,25 +71,22 @@ public class MenuCourse {
     }
 
     /**
-     * @overview: delete a course in database
-     * @effect: if using delete method in MyDBApp to delete successfully
+     * overview: delete a course in database
+     * effect: if using delete method in MyDBApp to delete successfully
      *              return true
      *          else
      *              return false
-     * @param courseId
-     * @return
+     * @param courseId String
+     * @return boolean
      */
     public boolean deleteCourse (String courseId){
         String sql = "DELETE FROM course WHERE courseid = '"+courseId+"' ";
-        if (myDBApp.delete(sql)){
-            return true;
-        }
-        return false;
+        return myDBApp.delete(sql);
     }
 
     /**
-     * @effect: using method selectToHtmlFile in MyDBApp to write all students in an HTML file
-     * @return
+     * effect: using method selectToHtmlFile in MyDBApp to write all students in an HTML file
+     * @return String
      */
     public String showAllCourseInHtmlFile(){
         String sql = "SELECT * FROM course";
@@ -97,9 +94,9 @@ public class MenuCourse {
     }
 
     /**
-     * @effect: using method selectAll in MyDBApp to show all students
-     * @return
-     * @throws SQLException
+     * effect: using method selectAll in MyDBApp to show all students
+     * @return String
+     * throws SQLException
      */
     public String allCourse () throws SQLException {
         String sql = "SELECT * FROM course";
@@ -107,66 +104,54 @@ public class MenuCourse {
     }
 
     /**
-     * @effect: using selectAll method in MyDBApp to select course where courseId = courseId
+     * effect: using selectAll method in MyDBApp to select course where courseId = courseId
      *          if result equals " "
      *              return false
      *          else
      *              return true
-     * @param courseId
-     * @return
-     * @throws SQLException
+     * @param courseId String
+     * @return boolean
+     * throws SQLException
      */
     public boolean isExistCourse(String courseId) throws SQLException {
         String sql = "SELECT courseid FROM course WHERE courseid = '"+ courseId+ "' ";
-        if (myDBApp.selectAll(sql).equals("")){
-            return false;
-        }
-        return true;
+        return !myDBApp.selectAll(sql).equals("");
     }
 
     /**
-     * @effect if courseId != null /\ courseId.length <= 5
+     * effect if courseId != null /\ courseId.length <= 5
      *              return true
      *         else
      *              return false
-     * @param courseId
-     * @return
+     * @param courseId String
+     * @return boolean
      */
     private boolean validateCourseID (String courseId){
-        if (courseId != null && courseId.length() <= 5){
-            return true;
-        }
-        return false;
+        return courseId != null && courseId.length() <= 5;
     }
 
     /**
-     * @effect if courseName != null /\ courseId.length <= 50
+     * effect if courseName != null /\ courseId.length <= 50
      *              return true
      *         else
      *              return false
-     * @param courseName
-     * @return
+     * @param courseName String
+     * @return boolean
      */
     private boolean validateCourseName (String courseName){
-        if (courseName != null && courseName.length() <= 50 ){
-            return true;
-        }
-        return false;
+        return courseName != null && courseName.length() <= 50;
     }
 
     /**
-     *@effect if prerequisite != null /\ prerequisite.length <= 250
+     *effect if prerequisite != null /\ prerequisite.length <= 250
      *              return true
      *         else
      *              return false
-     * @param prerequisite
-     * @return
+     * @param prerequisite String
+     * @return boolean
      */
     private boolean validatePrerequisite (String prerequisite){
-        if (prerequisite!= null && prerequisite.length()<= 250){
-            return true;
-        }
-        return false;
+        return prerequisite != null && prerequisite.length() <= 250;
     }
 
 }

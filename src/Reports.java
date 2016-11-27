@@ -2,26 +2,26 @@ import java.sql.SQLException;
 
 /**
  * Created by Thu Thuy Nguyen on 02/11/2016.
- * @overview: a class to show all reports
- * @attribute: myDBApp MyDBApp
+ * overview: a class to show all reports
+ * attribute: myDBApp MyDBApp
  */
 public class Reports {
     private MyDBApp myDBApp;
 
     /**
-     * @effect: create Reports object
-     * @param myDBApp
+     * effect: create Reports object
+     * @param myDBApp MyDBApp
      */
     public Reports (MyDBApp myDBApp){
         this.myDBApp = myDBApp;
     }
 
     /**
-     * @effect if exist student
+     * effect if exist student
      *              using selectToHtmlFile method in MyDBApp to write all courses of this student in an HTML file
-     * @param studentid
-     * @return
-     * @throws SQLException
+     * @param studentid int
+     * @return String
+     * throws SQLException
      */
     public String courseOfAStudent (int studentid) throws SQLException {
         String sql = "SELECT enrolment.course,course.name, enrolment.semester, enrolment.finalgrade, student.firstname, student.lastname\n" +
@@ -36,11 +36,11 @@ public class Reports {
     }
 
     /**
-     * @effect: if course is exist
+     * effect: if course is exist
      *              using selectToHtmlFile method in MyDBApp to write all students in a course in an HTML file
-     * @param courseid
-     * @return
-     * @throws SQLException
+     * @param courseid String
+     * @return String
+     * throws SQLException
      */
     public String studentsOfACourse (String courseid) throws SQLException{
         String sql = "SELECT enrolment.student, enrolment.course, enrolment.finalgrade, student.firstname, student.lastname " +
@@ -54,8 +54,8 @@ public class Reports {
     }
 
     /**
-     * @effect: using selectToHtmlFile method in MyDBApp to write all students failed at least one course in an HTML file
-     * @return
+     * effect: using selectToHtmlFile method in MyDBApp to write all students failed at least one course in an HTML file
+     * @return String
      */
     public String failedStudent (){
         String sql = "SELECT student.studentid, student.firstname, student.lastname, enrolment.course, course.name\n" +
@@ -67,14 +67,14 @@ public class Reports {
     }
 
     /**
-     * @effect: using selectAll method in MyDBApp to select course where courseId = courseId
+     * effect: using selectAll method in MyDBApp to select course where courseId = courseId
      *          if result equals " "
      *              return false
      *          else
      *              return true
-     * @param courseId
-     * @return
-     * @throws SQLException
+     * @param courseId String
+     * @return boolean
+     * throws SQLException
      */
     private boolean isExistCourse(String courseId) throws SQLException {
         String sql = "SELECT courseid FROM course WHERE courseid = '" + courseId+"'";
@@ -86,14 +86,14 @@ public class Reports {
     }
 
     /**
-     * @effect: using selectAll method in MyDBApp to select student where studentId = studentId
+     * effect: using selectAll method in MyDBApp to select student where studentId = studentId
      *          if result equals " "
      *              return false
      *          else
      *              return true
-     * @param studentId
-     * @return
-     * @throws SQLException
+     * @param studentId int
+     * @return boolean
+     * throws SQLException
      */
     private boolean isExistStudent(int studentId) throws SQLException {
         String sql = "SELECT studentid FROM student WHERE studentid =  " + studentId;
