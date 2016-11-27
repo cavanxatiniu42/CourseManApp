@@ -24,9 +24,11 @@ public class Reports {
      * @throws SQLException
      */
     public String courseOfAStudent (int studentid) throws SQLException {
-        String sql = "SELECT enrolment.course, enrolment.semester, enrolment.finalgrade, student.firstname, student.lastname " +
-                "FROM enrolment INNER JOIN student ON enrolment.student = student.studentid " +
-                "WHERE student = " + studentid;
+        String sql = "SELECT enrolment.course,course.name, enrolment.semester, enrolment.finalgrade, student.firstname, student.lastname\n" +
+                "FROM enrolment " +
+                "INNER JOIN student ON enrolment.student = student.studentid " +
+                "INNER JOIN course ON enrolment.course = course.courseid\n" +
+                "WHERE student = 1";
         if (isExistStudent(studentid)){
             return myDBApp.selectToHtmlFile(sql, "my_enrols.html");
         }
@@ -41,7 +43,10 @@ public class Reports {
      * @throws SQLException
      */
     public String studentsOfACourse (String courseid) throws SQLException{
-        String sql = "SELECT enrolment.student, enrolment.course, enrolment.finalgrade, student.firstname, student.lastname FROM enrolment INNER JOIN student ON enrolment.student = student.studentid WHERE course = '"+courseid+"';";
+        String sql = "SELECT enrolment.student, enrolment.course, enrolment.finalgrade, student.firstname, student.lastname " +
+                "FROM enrolment " +
+                "INNER JOIN student ON enrolment.student = student.studentid " +
+                "WHERE course = '"+courseid+"';";
         if (isExistCourse(courseid)){
             return myDBApp.selectToHtmlFile(sql, "course_enrols.html");
         }
@@ -53,9 +58,11 @@ public class Reports {
      * @return
      */
     public String failedStudent (){
-        String sql = "SELECT student.studentid, student.firstname, student.lastname, enrolment.course " +
-                "FROM enrolment INNER JOIN student ON enrolment.student = student.studentid" +
-                " WHERE finalgrade = 'F';";
+        String sql = "SELECT student.studentid, student.firstname, student.lastname, enrolment.course, course.name\n" +
+                "                FROM enrolment \n" +
+                "                INNER JOIN student ON enrolment.student = student.studentid\n" +
+                "                INNER JOIN course ON enrolment.course = course.courseid\n" +
+                "                 WHERE finalgrade = 'F';";
         return myDBApp.selectToHtmlFile(sql, "fails.html");
     }
 

@@ -2,34 +2,34 @@ import java.sql.SQLException;
 
 /**
  * Created by Thu Thuy Nguyen on 17/10/2016.
- * @Overview: a class to manage student in database
- * @attribute: myDBApp: MyDBApp
+ * Overview: a class to manage student in database
+ * attribute: myDBApp: MyDBApp
  */
 public class MenuStudent {
     private MyDBApp myDBApp;
 
     /**
-     * @effect: create object MenuStudent
-     * @param myDBApp
+     * effect: create object MenuStudent
+     * @param myDBApp MyDBApp
      */
     public MenuStudent(MyDBApp myDBApp) {
         this.myDBApp = myDBApp;
     }
 
     /**
-     * @overview: add a student in database
-     * @effect: if studentId, firstName, lastName, address, dateOfBirth are valid
+     * overview: add a student in database
+     * effect: if studentId, firstName, lastName, address, dateOfBirth are valid
      *              using insert method in MyDBApp to add student
      *              return true
      *          else
      *              return false
-     * @param studentId
-     * @param firstName
-     * @param lastName
-     * @param address
-     * @param dateOfBirth
+     * @param studentId int
+     * @param firstName String
+     * @param lastName String
+     * @param address String
+     * @param dateOfBirth String
      * @return
-     * @throws SQLException
+     * throws SQLException
      */
     public boolean addStudent(int studentId, String firstName, String lastName, String address, String dateOfBirth) throws SQLException {
         String sql = String.format("INSERT INTO Student VALUES (%d,'%s','%s','%s','%s');", studentId, firstName, lastName, address, dateOfBirth);
@@ -42,19 +42,19 @@ public class MenuStudent {
     }
 
     /**
-     * @overview: update a student's information
-     * @effect: if new firstName, lastName, address, dateOfBirth are valid
+     * overview: update a student's information
+     * effect: if new firstName, lastName, address, dateOfBirth are valid
      *              using update method in MyDBApp to update student
      *              return true
      *          else
      *              return false
      *
-     * @param studentId
-     * @param firstName
-     * @param lastName
-     * @param address
-     * @param dateOfBirth
-     * @return
+     * @param studentId int
+     * @param firstName String
+     * @param lastName String
+     * @param address String
+     * @param dateOfBirth String
+     * @return boolean
      */
     public boolean updateStudent (int studentId, String firstName, String lastName, String address, String dateOfBirth) throws SQLException {
         if ( validateName(firstName) && validateName(lastName) && validateAddress(address) && validateDOB(dateOfBirth)){
@@ -70,13 +70,13 @@ public class MenuStudent {
     }
 
     /**
-     * @overview: delete a student in database
-     * @effect: if using delete method in MyDBApp to delete successfully
+     * overview: delete a student in database
+     * effect: if using delete method in MyDBApp to delete successfully
      *              return true
      *          else
      *              return false
-     * @param studentId
-     * @return
+     * @param studentId int
+     * @return boolean
      */
     public boolean deleteStudent (int studentId){
         String sql = "DELETE FROM student WHERE studentid =" +studentId+ " ";
@@ -84,18 +84,18 @@ public class MenuStudent {
     }
 
     /**
-     * @effect: using method selectToHtmlFile in MyDBApp to write all students in an HTML file
-     * @return
+     * effect: using method selectToHtmlFile in MyDBApp to write all students in an HTML file
+     * @return String
      */
     public String showAllStudentInHtmlFile(){
         String sql = "SELECT * FROM student";
-        return myDBApp.selectToHtmlFile(sql, "student.html");
+        return myDBApp.selectToHtmlFile(sql, "students.html");
     }
 
     /**
-     * @effect: using method selectAll in MyDBApp to show all students
-     * @return
-     * @throws SQLException
+     * effect: using method selectAll in MyDBApp to show all students
+     * @return String
+     * throws SQLException
      */
     public String allStudent() throws SQLException {
         String sql = "SELECT * FROM student";
@@ -103,31 +103,28 @@ public class MenuStudent {
     }
 
     /**
-     * @effect: using selectAll method in MyDBApp to select student where studentId = studentId
+     * effect: using selectAll method in MyDBApp to select student where studentId = studentId
      *          if result equals " "
      *              return false
      *          else
      *              return true
-     * @param studentId
-     * @return
-     * @throws SQLException
+     * @param studentId int
+     * @return boolean
+     * throws SQLException
      */
     public boolean isExistStudent(int studentId) throws SQLException {
         String sql = "SELECT studentid FROM student WHERE studentid = "+ studentId+ " ";
-        if (myDBApp.selectAll(sql).equals("")){
-            return false;
-        }
-       return true;
+        return !myDBApp.selectAll(sql).equals("");
     }
 
     /**
-     * @effect if studentId >0
+     * effect if studentId >0
      *            return true
      *         else
      *            return false
      *            print error message
-     * @param studentId
-     * @return
+     * @param studentId int
+     * @return boolean
      */
     private boolean validateID (int studentId){
         if ( studentId > 0 ){
@@ -138,47 +135,38 @@ public class MenuStudent {
     }
 
     /**
-     * @effect: if name != null /\ name.length <=50
+     * effect: if name != null /\ name.length <=50
      *              return true
      *          else
      *              return false
-     * @param name
-     * @return
+     * @param name String
+     * @return boolean
      */
     private boolean validateName(String name){
-        if (name!= null && name.length()<=50){
-            return true;
-        }
-        return false;
+        return name != null && name.length() <= 50;
     }
 
     /**
-     * @effect: if address != null /\ address.length <=50
+     * effect: if address != null /\ address.length <=50
      *              return true
      *          else
      *              return false
-     * @param address
-     * @return
+     * @param address String
+     * @return boolean
      */
     private boolean validateAddress (String address){
-        if (address != null && address.length() <= 250){
-            return true;
-        }
-        return false;
+        return address != null && address.length() <= 250;
     }
 
     /**
-     * @effect: if dateOfBirth != null /\ dateOfBirth.length <=50
+     * effect: if dateOfBirth != null /\ dateOfBirth.length <=50
      *              return true
      *          else
      *              return false
-     * @param dateOfBirth
-     * @return
+     * @param dateOfBirth String
+     * @return boolean
      */
     private boolean validateDOB (String dateOfBirth){
-        if (dateOfBirth != null && dateOfBirth.length()<=30){
-            return true;
-        }
-        return false;
+        return dateOfBirth != null && dateOfBirth.length() <= 30;
     }
 }

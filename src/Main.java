@@ -236,9 +236,21 @@ public class Main {
                 case 1:
                     TextIO.putln("Input student id");
                     int studentID = TextIO.getInt();
+                    if (!enrolmentManagement.isExistStudent(studentID)){
+                        System.out.println("Student does not exist!");
+                        break;
+                    }
                     TextIO.getln();
                     TextIO.putln("Input course id ");
                     String courseId = TextIO.getln();
+                    if (!enrolmentManagement.isExistCourse(courseId)){
+                        System.out.println("Course does not exist!");
+                        break;
+                    }
+                    if (!enrolmentManagement.isExistEnrolment(studentID,courseId)){
+                        System.out.println("enrolment existed!");
+                        break;
+                    }
                     TextIO.putln("Input semester");
                     int semester = TextIO.getInt();
                     if (enrolmentManagement.addEnrolment(studentID, courseId, semester)){
@@ -250,6 +262,7 @@ public class Main {
                 case 2:
                     TextIO.putln("Input student id: ");
                     int studentId = TextIO.getInt();
+
                     TextIO.getln();
                     TextIO.putln("Input course id: ");
                     String courseID = TextIO.getln();

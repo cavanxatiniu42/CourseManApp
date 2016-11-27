@@ -93,7 +93,7 @@ public class MenuCourse {
      */
     public String showAllCourseInHtmlFile(){
         String sql = "SELECT * FROM course";
-        return myDBApp.selectToHtmlFile(sql, "course.html");
+        return myDBApp.selectToHtmlFile(sql, "courses.html");
     }
 
     /**
