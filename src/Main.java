@@ -8,7 +8,7 @@ import java.time.Year;
 public class Main {
     public static void main(String[] args) throws SQLException {
         MyDBApp myDBApp = new MyDBApp("jdbc:postgresql:%s");
-        myDBApp.connect("courseman", "postgres", "123456");
+        myDBApp.connect("northwind", "postgres", "123456");
         int choice;
         do {
             TextIO.putln("===========Course Man App============");

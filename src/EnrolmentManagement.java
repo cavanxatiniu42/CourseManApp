@@ -36,7 +36,7 @@ public class EnrolmentManagement {
         if (validateCourseId(courseId)&&validateStudentId(studentId)&&validateSemester(semester)){
             if (isExistCourse(courseId)&&isExistStudent(studentId)){
                 if (isExistEnrolment(studentId,courseId)){
-                    if (!isEligibleToEnroll(studentId,courseId)){
+                    if (isEligibleToEnroll(studentId,courseId)){
                         String sql = String.format("INSERT INTO Enrolment VALUES (%d,'%s',%d, '%s');", studentId, courseId, semester, defaultFinalGrade );
                         return myDBApp.insert(sql);
                     } else {
@@ -129,10 +129,10 @@ public class EnrolmentManagement {
     private boolean isEligibleToEnroll(int studentId, String courseId) throws SQLException {
         String sql = String.format("SELECT prerequisites FROM course WHERE courseid = '%s';", courseId);
         String prerequisites = myDBApp.selectAll(sql).substring(0,3);
-        if (prerequisites.equals(" ")){
+        if (prerequisites.equals("-")){
             return true;
         }
-        if (!isExistEnrolment(studentId, prerequisites)){
+        if (isExistEnrolment(studentId, prerequisites)){
             return false;
         } else {
             return true;
